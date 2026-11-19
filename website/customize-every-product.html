@@ -18,8 +18,13 @@ html,body{margin:0;background:#fff;color:var(--ink);font-family:Lato,system-ui,s
 .emb#sShelf{background:#fff}
 .emb iframe{position:sticky;top:0;display:block;width:100%;height:100vh;border:0}
 
+/* ===== effect headings ===== */
+.fxh{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:22px max(24px,calc((100% - 1280px)/2));background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.fxh .mono{font-size:11px;letter-spacing:.1em;color:#fff;background:var(--blue);border-radius:6px;padding:4px 9px}
+.fxh h3{font-family:Dosis,sans-serif;font-weight:700;font-size:24px;margin:0}
+.fxh p{margin:0;color:var(--mut);font-size:14px;flex:1 1 320px}
 /* ===== Personalization Galaxy ===== */
-.gx{padding:120px 24px 40px;background:#fff;position:relative;overflow:hidden}
+.gx{padding:88px 24px 40px;background:#fff;position:relative;overflow:hidden}
 .gx-head{text-align:center;max-width:760px;margin:0 auto}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em;color:var(--blue);background:var(--soft);border:1px solid #C9D8FF;border-radius:999px;padding:6px 14px}
 .eyebrow i{width:6px;height:6px;border-radius:50%;background:var(--blue)}
@@ -98,6 +103,7 @@ html,body{margin:0;background:#fff;color:var(--ink);font-family:Lato,system-ui,s
 </head>
 <body>
 
+<header class="fxh"><span class="mono">EFFECT 01</span><h3>Gallery walk</h3><p>3D gallery corridor (Three.js). Scroll or drag to walk past the collections, click a product to try it.</p></header>
 <section class="emb" id="sWalk" aria-label="Personalization gallery"><iframe title="Walk through what your shoppers can personalize" data-srcdoc="&lt;!doctype html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -1358,6 +1364,7 @@ addEventListener(&#x27;resize&#x27;, () =&gt; { resize(); kick(); });
 &lt;/html&gt;
 "></iframe></section>
 
+<header class="fxh"><span class="mono">EFFECT 02</span><h3>Personalization Galaxy</h3><p>An orbit of personalization types around a live product page. Click a type and the product in the middle updates; type, choose or upload to try it.</p></header>
 <section class="gx" aria-label="Personalization galaxy">
   <div class="gx-head">
     <span class="eyebrow mono"><i></i>PERSONALIZATION GALAXY</span>
@@ -1373,6 +1380,7 @@ addEventListener(&#x27;resize&#x27;, () =&gt; { resize(); kick(); });
   </div>
 </section>
 
+<header class="fxh"><span class="mono">EFFECT 03</span><h3>Flex carousel</h3><p>React Bits Flex Carousel (WebGL liquid-glass shelf). Scroll or drag the shelf, click a product to personalize it on its own photo.</p></header>
 <section class="emb" id="sShelf" aria-label="Product shelf"><iframe title="Pick a product, make it theirs" data-srcdoc="&lt;!doctype html&gt;
 &lt;html lang=&quot;en&quot;&gt;
 &lt;head&gt;
@@ -2940,7 +2948,9 @@ const visual = k => k.startsWith('gen:') ? GEN[k.slice(4)]() : `<img src="${IMG[
     const d = anim ? fly(i) : 0; setTimeout(() => renderCenter(anim), d);
   }
   ring.addEventListener('click', e => { const b = e.target.closest('.it'); if (b) { autoStop = true; pick(+b.dataset.i); } });
-  gal.addEventListener('mouseenter', () => hover = true); gal.addEventListener('mouseleave', () => hover = false);
+  /* the orbit keeps turning; it only pauses while the pointer is on a tile, so that tile can be clicked */
+  ring.addEventListener('pointerover', e => { hover = !!e.target.closest('.it'); });
+  ring.addEventListener('pointerout', e => { if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('.it')) hover = false; });
   galf.addEventListener('click', e => { const c = e.target.closest('.chip'); if (!c) return; $$('.chip', galf).forEach(x => x.classList.toggle('on', x === c)); cat = c.dataset.k; layout(); const v = visible(); if (v.length) pick(+v[0].dataset.i); });
   pick(0, false); layout(); addEventListener('resize', layout);
   let inView = true; new IntersectionObserver(es => { inView = es[0].isIntersecting; }).observe(gal);
